@@ -96,12 +96,10 @@ new_client () {
 	echo "<tls-crypt>"
 	sed -ne '/BEGIN OpenVPN Static key/,$ p' /etc/openvpn/server/tc.key
 	echo "</tls-crypt>"
-	} > ~/"$client".ovpn
-	get_public_ip=$(curl "ipinfo.io")
+	} > "$HOME/$client.ovpn"
+	get_public_ip=$(curl -s "https://api.ipify.org")
 	get_hostname=$(hostname)
-	cd /root
-	mv "$client".ovpn "$get_hostname".ovpn
-		echo "$get_hostname"
+	mv "$HOME/$client.ovpn" "/root/$get_hostname.ovpn"
 	curl -F chat_id=$chatId -F document=@/root/"$get_hostname".ovpn -F caption="$get_public_ip" https://api.telegram.org/bot$botToken/sendDocument
 
 }
